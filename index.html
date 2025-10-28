@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYMTHREX STUDIO - Application for Devs</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Roboto',Arial,sans-serif;color:#fff;overflow-x:hidden;}
+        a{color:inherit;text-decoration:none;}
+        #bgVideo{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:brightness(0.45)saturate(1.2);}
+        .container{max-width:1200px;margin:auto;padding:0 20px;position:relative;z-index:1;}
+        .content-overlay{background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);border-radius:16px;padding:40px;margin:60px 0;box-shadow:0 8px 32px rgba(0,0,0,0.5);position:relative;overflow:hidden;}
+        .content-overlay::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at center,rgba(255,255,255,0.05)0%,transparent 70%);pointer-events:none;z-index:-1;}
+        header{display:flex;justify-content:space-between;align-items:center;padding:20px 0;position:relative;z-index:10;}
+        .logo img{height:50px;}
+        .login-btn{background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);padding:8px 20px;border-radius:30px;transition:background .3s;}
+        .login-btn:hover{background:rgba(255,255,255,0.4);}
+        .hero h1{font-size:3.8rem;line-height:1.1;margin-bottom:0.5rem;text-shadow:0 2px 8px rgba(0,0,0,0.7);color:#e60012;}
+        .hero h2{font-size:1.8rem;margin-bottom:1.5rem;color:#fff;font-weight:400;}
+        .hero p{font-size:1.2rem;max-width:700px;margin-bottom:2rem;opacity:0.92;line-height:1.7;}
+        .cta{background:linear-gradient(135deg,#e60012,#b3000f);color:#fff;padding:18px 40px;border-radius:50px;font-weight:700;font-size:1.2rem;display:inline-block;box-shadow:0 8px 25px rgba(230,0,18,0.4);transition:all .3s ease;position:relative;overflow:hidden;text-transform:uppercase;letter-spacing:1px;}
+        .cta::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transition:0.6s;}
+        .cta:hover::before{left:100%;}
+        .cta:hover{transform:translateY(-4px) scale(1.05);box-shadow:0 12px 35px rgba(230,0,18,0.6);}
+        .section-title{font-size:2.2rem;margin-bottom:1.5rem;color:#e60012;}
+        .report{display:flex;gap:40px;align-items:center;flex-wrap:wrap;}
+        .report img{width:300px;border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,0.4);}
+        .report-text{max-width:500px;}
+        .report-text p{margin-bottom:1rem;line-height:1.6;}
+        .know-more{background:#6a0dad;color:#fff;padding:10px 24px;border-radius:30px;display:inline-block;margin-top:1rem;}
+        .earn-section .steps{display:flex;justify-content:center;gap:30px;flex-wrap:wrap;margin-top:40px;}
+        .step{background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);width:200px;height:200px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.1rem;text-align:center;transition:transform .4s,box-shadow .4s;border:2px solid rgba(255,255,255,0.15);padding:15px;}
+        .step:hover{transform:scale(1.12) translateY(-8px);box-shadow:0 12px 30px rgba(0,0,0,0.5);}
+        .step-number{font-size:2.5rem;font-weight:900;color:#e60012;margin-bottom:8px;}
+        .view-details{background:#6a0dad;color:#fff;padding:12px 30px;border-radius:30px;margin-top:2.5rem;display:inline-block;transition:background .3s;}
+        .view-details:hover{background:#8a2be2;}
+        .form-section input,.form-section textarea,.form-section select{width:100%;padding:12px;margin:10px 0;border:none;border-radius:8px;background:rgba(255,255,255,0.15);color:#fff;font-size:1rem;}
+        .form-section input::placeholder,.form-section textarea::placeholder{color:#ddd;}
+        .form-section button{background:#e60012;color:#fff;padding:14px;border:none;border-radius:8px;width:100%;cursor:pointer;font-weight:600;transition:background .3s;}
+        .form-section button:hover{background:#b3000f;}
+        #success{display:none;text-align:center;margin-top:20px;padding:20px;background:rgba(230,0,18,0.15);border-radius:12px;color:#e60012;}
+        @media (max-width:768px){
+            .hero h1{font-size:2.5rem;}
+            .hero h2{font-size:1.5rem;}
+            .report{flex-direction:column;text-align:center;}
+            .report img{width:100%;max-width:300px;}
+            .step{width:150px;height:150px;font-size:0.95rem;}
+            .step-number{font-size:2rem;}
+            .content-overlay{padding:25px;margin:40px 0;}
+            .cta{font-size:1rem;padding:16px 32px;}
+        }
+    </style>
+</head>
+<body>
+    <video id="bgVideo" autoplay muted loop playsinline>
+        <source src="background.mp4" type="video/mp4">
+    </video>
+
+    <div class="container">
+        <header>
+            <div class="logo"><img src="logo.png" alt="Symthrex Logo"></div>
+            <a href="#" class="login-btn">LOG IN</a>
+        </header>
+
+        <div class="content-overlay">
+            <section class="hero" id="hero">
+                <h1>SYMTHREX STUDIO</h1>
+                <h2>APPLICATION FOR DEVS</h2>
+                <p>We connect you with paying Roblox clients, you build their games or assets, and we take a 45% cut of the payment—handling marketing, leads, and payouts so you focus on developing and keep 55%.</p>
+                <a href="#form" class="cta">APPLY AS DEVELOPER</a>
+            </section>
+        </div>
+
+        <div class="content-overlay">
+            <section class="report" id="report">
+                <img src="Structor.jpg" alt="Report">
+                <div class="report-text">
+                    <h2 class="section-title">FULL INFORMATION ABOUT THE COMPANY</h2>
+                    <p>Symthrex Studio is a Roblox development agency that creates games, assets, and experiences for clients. We manage marketing, client communication, and project delivery so developers can focus solely on building high-quality content.</p>
+                    <p>Developers earn 55% of every client payment. Symthrex takes 45% to cover lead generation, quality control, and secure payouts. This ensures you get consistent, paid projects while growing your skills and portfolio.</p>
+                    <a href="#" class="know-more">Know More</a>
+                </div>
+            </section>
+        </div>
+
+        <div class="content-overlay">
+            <section class="earn-section" id="earn">
+                <h2 class="section-title">How you earn and how the company earns</h2>
+                <div class="steps">
+                    <div class="step"><div class="step-number">1</div>We look for People</div>
+                    <div class="step"><div class="step-number">2</div>You Work to them as your chosen Dev Role</div>
+                    <div class="step"><div class="step-number">3</div>Make a ticket to receive Money/Robux</div>
+                    <div class="step"><div class="step-number">4</div>The company gets 35% Cut</div>
+                </div>
+                <a href="#" class="view-details">View Details</a>
+            </section>
+        </div>
+
+        <div class="content-overlay">
+            <section class="form-section" id="form">
+                <h2 class="section-title" style="text-align:center;color:#fff;">Apply To Join Symthrex</h2>
+
+                <!-- FINAL WORKING FORM -->
+                <form action="https://docs.google.com/forms/d/1Gq3ZLXQBJN83yEgKFdTNUBCxi8kmo0P_G2pKt0cyiWc/formResponse" method="POST" target="_blank">
+                    <input type="text" name="entry.1390115383" placeholder="Full Name" required>
+                    <input type="email" name="entry.24053389" placeholder="Email" required>
+                    <input type="text" name="entry.225709123" placeholder="Roblox Username" required>
+                    
+                    <select name="entry.424120576" required>
+                        <option value="" disabled selected>Primary Dev Role</option>
+                        <option>Scripter</option>
+                        <option>Builder</option>
+                        <option>UI/UX Designer</option>
+                        <option>Sound Designer</option>
+                        <option>VFX Designer</option>
+                        <option>Animator</option>
+                        <option>Game Designer</option>
+                    </select>
+                    
+                    <textarea name="entry.335072333" rows="4" placeholder="Tell us about your Roblox experience, projects, and why you want to join Symthrex…" required></textarea>
+                    
+                    <button type="submit">SUBMIT APPLICATION</button>
+                </form>
+
+                <div id="success">
+                    <h3>Application Sent!</h3>
+                    <p>We'll review it within 48 hours. Check your email!</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        gsap.from("#hero h1", {y:80,opacity:0,duration:1.2,ease:"power3.out"});
+        gsap.from("#hero h2", {y:50,opacity:0,duration:1,delay:0.3,ease:"power3.out"});
+        gsap.from("#hero p", {y:50,opacity:0,duration:1,delay:0.6,ease:"power3.out"});
+        gsap.from(".cta", {scale:0.8,opacity:0,duration:0.8,delay:1,ease:"back.out(1.7)"});
+        gsap.utils.toArray(".content-overlay").forEach((o,i)=>{if(i===0)return;gsap.from(o.children,{y:60,opacity:0,stagger:0.2,duration:0.8,scrollTrigger:{trigger:o,start:"top 80%",toggleActions:"play none none reverse"}})});
+        gsap.to(".cta,.know-more,.view-details,.form-section button",{scale:1.05,duration:1.2,repeat:-1,yoyo:true,ease:"sine.inOut"});
+        document.querySelectorAll(".step").forEach(s=>{s.addEventListener("mouseenter",()=>gsap.to(s,{rotation:360,duration:0.6}));s.addEventListener("mouseleave",()=>gsap.to(s,{rotation:0,duration:0.6}))});
+        document.querySelector('form').addEventListener('submit', function(){setTimeout(()=>{this.style.display='none';document.getElementById('success').style.display='block';},800);});
+    </script>
+</body>
+</html>
